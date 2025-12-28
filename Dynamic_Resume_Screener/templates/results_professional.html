@@ -1,0 +1,1049 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Resume Analysis Results - Professional AI Screener</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap"
+        rel="stylesheet">
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #6366f1;
+            --primary-dark: #4f46e5;
+            --secondary: #8b5cf6;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+            --info: #3b82f6;
+            --dark: #1e293b;
+            --light: #f8fafc;
+            --border: #e2e8f0;
+            --shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+            --shadow-lg: 0 20px 25px -5px rgb(0 0 0 / 0.1);
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        /* Header Section */
+        .header {
+            text-align: center;
+            color: white;
+            margin-bottom: 40px;
+            animation: fadeInDown 0.6s ease;
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            font-weight: 800;
+            margin-bottom: 10px;
+            text-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+        }
+
+        .header p {
+            font-size: 1.1rem;
+            opacity: 0.95;
+            font-weight: 500;
+        }
+
+        .mode-badge {
+            display: inline-block;
+            background: rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(10px);
+            padding: 8px 20px;
+            border-radius: 50px;
+            margin-top: 15px;
+            font-weight: 600;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+
+        /* Main Card */
+        .results-card {
+            background: white;
+            border-radius: 24px;
+            box-shadow: var(--shadow-lg);
+            overflow: hidden;
+            animation: fadeInUp 0.6s ease;
+        }
+
+        /* Top Banner */
+        .top-banner {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            color: white;
+            padding: 30px 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        .file-info h2 {
+            font-size: 1.5rem;
+            margin-bottom: 8px;
+            font-weight: 700;
+        }
+
+        .file-meta {
+            opacity: 0.9;
+            font-size: 0.95rem;
+        }
+
+        .quick-stats {
+            display: flex;
+            gap: 30px;
+        }
+
+        .stat-item {
+            text-align: center;
+        }
+
+        .stat-value {
+            font-size: 2rem;
+            font-weight: 800;
+            display: block;
+        }
+
+        .stat-label {
+            font-size: 0.85rem;
+            opacity: 0.9;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        /* Score Section */
+        .score-section {
+            padding: 50px 40px;
+            text-align: center;
+            background: linear-gradient(to bottom, #f8fafc, white);
+            border-bottom: 1px solid var(--border);
+        }
+
+        .score-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 60px;
+            flex-wrap: wrap;
+        }
+
+        .score-circle-wrapper {
+            position: relative;
+        }
+
+        .score-circle {
+            width: 240px;
+            height: 240px;
+            position: relative;
+        }
+
+        .score-circle svg {
+            transform: rotate(-90deg);
+            filter: drop-shadow(0 10px 30px rgba(0, 0, 0, 0.15));
+        }
+
+        .score-circle circle {
+            fill: none;
+            stroke-width: 18;
+        }
+
+        .score-circle .bg-circle {
+            stroke: #e2e8f0;
+        }
+
+        .score-circle .progress-circle {
+            stroke-linecap: round;
+            transition: stroke-dashoffset 2s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .score-text {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+        }
+
+        .score-value {
+            font-size: 4rem;
+            font-weight: 900;
+            line-height: 1;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .score-label {
+            font-size: 0.9rem;
+            color: #64748b;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-top: 5px;
+        }
+
+        .recommendation-box {
+            text-align: left;
+        }
+
+        .recommendation-title {
+            font-size: 1.2rem;
+            color: #64748b;
+            margin-bottom: 15px;
+            font-weight: 600;
+        }
+
+        .recommendation {
+            font-size: 3rem;
+            font-weight: 900;
+            margin-bottom: 15px;
+            line-height: 1.1;
+        }
+
+        .recommendation.excellent {
+            background: linear-gradient(135deg, #10b981, #059669);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .recommendation.good {
+            background: linear-gradient(135deg, #3b82f6, #2563eb);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .recommendation.average {
+            background: linear-gradient(135deg, #f59e0b, #d97706);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .recommendation.poor {
+            background: linear-gradient(135deg, #ef4444, #dc2626);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .ml-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            padding: 8px 16px;
+            border-radius: 50px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            margin-top: 10px;
+        }
+
+        .confidence-bar {
+            margin-top: 15px;
+        }
+
+        .confidence-label {
+            font-size: 0.9rem;
+            color: #64748b;
+            margin-bottom: 8px;
+            font-weight: 500;
+        }
+
+        .progress-bar {
+            height: 8px;
+            background: #e2e8f0;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--primary), var(--secondary));
+            border-radius: 10px;
+            transition: width 1.5s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        /* Content Section */
+        .content-section {
+            padding: 40px;
+        }
+
+        .section {
+            margin-bottom: 40px;
+        }
+
+        .section-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 20px;
+            padding-bottom: 12px;
+            border-bottom: 2px solid var(--border);
+        }
+
+        .section-icon {
+            font-size: 1.5rem;
+        }
+
+        .section-title {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: var(--dark);
+        }
+
+        .section-count {
+            background: var(--light);
+            color: var(--primary);
+            padding: 4px 12px;
+            border-radius: 50px;
+            font-size: 0.85rem;
+            font-weight: 700;
+        }
+
+        /* Skills Grid */
+        .skills-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 12px;
+        }
+
+        .skill-tag {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            padding: 12px 20px;
+            border-radius: 12px;
+            font-weight: 600;
+            font-size: 0.95rem;
+            text-align: center;
+            box-shadow: 0 4px 12px rgba(99, 102, 241, 0.2);
+            transition: all 0.3s ease;
+            cursor: default;
+        }
+
+        .skill-tag:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(99, 102, 241, 0.3);
+        }
+
+        .skill-tag.preferred {
+            background: linear-gradient(135deg, var(--success), #059669);
+            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.2);
+        }
+
+        .skill-tag.missing {
+            background: linear-gradient(135deg, var(--danger), #dc2626);
+            box-shadow: 0 4px 12px rgba(239, 68, 68, 0.2);
+        }
+
+        /* Info Cards */
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+        }
+
+        .info-card {
+            background: var(--light);
+            padding: 20px;
+            border-radius: 16px;
+            border-left: 4px solid var(--primary);
+            transition: all 0.3s ease;
+        }
+
+        .info-card:hover {
+            transform: translateX(5px);
+            box-shadow: var(--shadow);
+        }
+
+        .info-card-title {
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 8px;
+            font-size: 0.95rem;
+        }
+
+        .info-card-value {
+            color: var(--dark);
+            font-size: 1.1rem;
+        }
+
+        /* Lists */
+        .info-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .info-list li {
+            padding: 12px 0;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: start;
+            gap: 12px;
+        }
+
+        .info-list li:last-child {
+            border-bottom: none;
+        }
+
+        .list-icon {
+            color: var(--success);
+            font-size: 1.2rem;
+            flex-shrink: 0;
+        }
+
+        .suggestion-list .list-icon {
+            color: var(--warning);
+        }
+
+        /* Action Buttons */
+        .action-section {
+            padding: 30px 40px;
+            background: var(--light);
+            border-top: 1px solid var(--border);
+        }
+
+        .btn-group {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+        }
+
+        .btn {
+            padding: 16px 32px;
+            border: none;
+            border-radius: 12px;
+            font-size: 1rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            text-align: center;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(99, 102, 241, 0.4);
+        }
+
+        .btn-secondary {
+            background: white;
+            color: var(--primary);
+            border: 2px solid var(--primary);
+        }
+
+        .btn-secondary:hover {
+            background: var(--primary);
+            color: white;
+        }
+
+        .btn-success {
+            background: linear-gradient(135deg, var(--success), #059669);
+            color: white;
+            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+        }
+
+        /* Feedback Section */
+        .feedback-section {
+            padding: 30px 40px;
+            background: linear-gradient(135deg, rgba(99, 102, 241, 0.05), rgba(139, 92, 246, 0.05));
+            border-top: 1px solid var(--border);
+            text-align: center;
+        }
+
+        .feedback-title {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: var(--dark);
+            margin-bottom: 10px;
+        }
+
+        .feedback-subtitle {
+            color: #64748b;
+            margin-bottom: 25px;
+        }
+
+        .feedback-buttons {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .feedback-btn {
+            padding: 14px 32px;
+            border: none;
+            border-radius: 12px;
+            font-size: 1.05rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .feedback-btn.positive {
+            background: linear-gradient(135deg, var(--success), #059669);
+            color: white;
+            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+        }
+
+        .feedback-btn.positive:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(16, 185, 129, 0.4);
+        }
+
+        .feedback-btn.negative {
+            background: linear-gradient(135deg, var(--danger), #dc2626);
+            color: white;
+            box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3);
+        }
+
+        .feedback-btn.negative:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(239, 68, 68, 0.4);
+        }
+
+        .feedback-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .feedback-message {
+            margin-top: 20px;
+            padding: 15px;
+            border-radius: 12px;
+            font-weight: 600;
+            display: none;
+        }
+
+        .feedback-message.success {
+            background: rgba(16, 185, 129, 0.1);
+            color: #059669;
+            border: 2px solid rgba(16, 185, 129, 0.3);
+            display: block;
+        }
+
+        .feedback-message.error {
+            background: rgba(239, 68, 68, 0.1);
+            color: #dc2626;
+            border: 2px solid rgba(239, 68, 68, 0.3);
+            display: block;
+        }
+
+        /* Animations */
+        @keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2rem;
+            }
+
+            .top-banner {
+                padding: 25px 20px;
+            }
+
+            .quick-stats {
+                width: 100%;
+                justify-content: space-around;
+            }
+
+            .score-container {
+                flex-direction: column;
+                gap: 30px;
+            }
+
+            .recommendation {
+                font-size: 2rem;
+            }
+
+            .content-section {
+                padding: 30px 20px;
+            }
+
+            .skills-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .btn-group {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Print Styles */
+        @media print {
+            body {
+                background: white;
+            }
+
+            .action-section,
+            .feedback-section {
+                display: none;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <h1>📊 Resume Analysis Results</h1>
+            <p>AI-Powered Intelligent Screening</p>
+            {% if result.analysis.mode == 'job_matching' %}
+            <span class="mode-badge">🎯 Job Matching Analysis</span>
+            {% else %}
+            <span class="mode-badge">📋 Standalone Profile Analysis</span>
+            {% endif %}
+        </div>
+
+        <!-- Main Results Card -->
+        <div class="results-card">
+            <!-- Top Banner -->
+            <div class="top-banner">
+                <div class="file-info">
+                    <h2>📄 {{ result.filename }}</h2>
+                    <div class="file-meta">Analyzed on {{ result.upload_time }}</div>
+                </div>
+                <div class="quick-stats">
+                    {% if result.analysis.mode == 'job_matching' %}
+                    <div class="stat-item">
+                        <span class="stat-value">{{ result.analysis.required_skills_found|length }}</span>
+                        <span class="stat-label">Skills Match</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-value">{{ result.analysis.experience_years }}</span>
+                        <span class="stat-label">Years Exp</span>
+                    </div>
+                    {% else %}
+                    <div class="stat-item">
+                        <span class="stat-value">{{ result.analysis.total_skills }}</span>
+                        <span class="stat-label">Total Skills</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-value">{{ result.analysis.quality.score }}</span>
+                        <span class="stat-label">Quality</span>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+
+            <!-- Score Section -->
+            <div class="score-section">
+                <div class="score-container">
+                    <div class="score-circle-wrapper">
+                        <div class="score-circle">
+                            <svg width="240" height="240">
+                                <defs>
+                                    <linearGradient id="scoreGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                                        <stop offset="0%" style="stop-color:#6366f1;stop-opacity:1" />
+                                        <stop offset="100%" style="stop-color:#8b5cf6;stop-opacity:1" />
+                                    </linearGradient>
+                                </defs>
+                                <circle class="bg-circle" cx="120" cy="120" r="100"></circle>
+                                <circle class="progress-circle" cx="120" cy="120" r="100" stroke="url(#scoreGradient)"
+                                    stroke-dasharray="{{ ((result.analysis.match_percentage if result.analysis.mode == 'job_matching' else result.analysis.score) / 100 * 628) }} 628"
+                                    stroke-dashoffset="0"></circle>
+                            </svg>
+                            <div class="score-text">
+                                <div class="score-value">
+                                    {{ result.analysis.match_percentage if result.analysis.mode == 'job_matching' else
+                                    result.analysis.score }}%
+                                </div>
+                                <div class="score-label">
+                                    {{ 'Match' if result.analysis.mode == 'job_matching' else 'Score' }}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="recommendation-box">
+                        <div class="recommendation-title">Overall Assessment</div>
+                        <div class="recommendation {{ result.analysis.recommendation_class }}">
+                            {{ result.analysis.recommendation }}
+                        </div>
+                        {% if result.analysis.used_ml %}
+                        <div class="ml-badge">
+                            <span>🤖</span>
+                            <span>AI-Powered Prediction</span>
+                        </div>
+                        {% endif %}
+                        {% if result.analysis.ml_confidence %}
+                        <div class="confidence-bar">
+                            <div class="confidence-label">
+                                Model Confidence: {{ (result.analysis.ml_confidence * 100)|round(1) }}%
+                            </div>
+                            <div class="progress-bar">
+                                <div class="progress-fill"
+                                    style="width: {{ (result.analysis.ml_confidence * 100)|round(1) }}%"></div>
+                            </div>
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+
+            <!-- Content Section -->
+            <div class="content-section">
+                {% if result.analysis.mode == 'job_matching' %}
+                <!-- Job Matching Mode -->
+
+                <!-- Required Skills -->
+                <div class="section">
+                    <div class="section-header">
+                        <span class="section-icon">✅</span>
+                        <h3 class="section-title">Required Skills Found</h3>
+                        <span class="section-count">{{ result.analysis.required_skills_found|length }}</span>
+                    </div>
+                    {% if result.analysis.required_skills_found %}
+                    <div class="skills-grid">
+                        {% for skill in result.analysis.required_skills_found %}
+                        <div class="skill-tag">{{ skill }}</div>
+                        {% endfor %}
+                    </div>
+                    {% else %}
+                    <p style="color: #94a3b8;">No required skills detected in resume</p>
+                    {% endif %}
+                </div>
+
+                <!-- Missing Skills -->
+                {% if result.analysis.missing_skills %}
+                <div class="section">
+                    <div class="section-header">
+                        <span class="section-icon">❌</span>
+                        <h3 class="section-title">Missing Skills</h3>
+                        <span class="section-count">{{ result.analysis.missing_skills|length }}</span>
+                    </div>
+                    <div class="skills-grid">
+                        {% for skill in result.analysis.missing_skills %}
+                        <div class="skill-tag missing">{{ skill }}</div>
+                        {% endfor %}
+                    </div>
+                </div>
+                {% endif %}
+
+                <!-- Preferred Skills -->
+                {% if result.analysis.preferred_skills_found %}
+                <div class="section">
+                    <div class="section-header">
+                        <span class="section-icon">⭐</span>
+                        <h3 class="section-title">Preferred Skills Found</h3>
+                        <span class="section-count">{{ result.analysis.preferred_skills_found|length }}</span>
+                    </div>
+                    <div class="skills-grid">
+                        {% for skill in result.analysis.preferred_skills_found %}
+                        <div class="skill-tag preferred">{{ skill }}</div>
+                        {% endfor %}
+                    </div>
+                </div>
+                {% endif %}
+
+                <!-- Experience & Education -->
+                <div class="section">
+                    <div class="section-header">
+                        <span class="section-icon">👤</span>
+                        <h3 class="section-title">Candidate Profile</h3>
+                    </div>
+                    <div class="info-grid">
+                        <div class="info-card">
+                            <div class="info-card-title">Experience</div>
+                            <div class="info-card-value">
+                                {{ result.analysis.experience_years }} years
+                                {% if result.analysis.required_experience %}
+                                (Required: {{ result.analysis.required_experience }}+ years)
+                                {% endif %}
+                            </div>
+                        </div>
+                        <div class="info-card">
+                            <div class="info-card-title">Education</div>
+                            <div class="info-card-value">
+                                {{ 'Qualified ✓' if result.analysis.has_education else 'Not specified' }}
+                            </div>
+                        </div>
+                        <div class="info-card">
+                            <div class="info-card-title">Resume Quality</div>
+                            <div class="info-card-value">{{ result.analysis.quality.score }}/100</div>
+                        </div>
+                    </div>
+                </div>
+
+                {% else %}
+                <!-- Standalone Mode -->
+
+                <!-- Skills by Category -->
+                {% if result.analysis.skills_by_category %}
+                <div class="section">
+                    <div class="section-header">
+                        <span class="section-icon">🎯</span>
+                        <h3 class="section-title">Skills Profile</h3>
+                        <span class="section-count">{{ result.analysis.total_skills }} total</span>
+                    </div>
+                    {% for category, skills in result.analysis.skills_by_category.items() %}
+                    <div style="margin-bottom: 25px;">
+                        <h4 style="color: var(--primary); margin-bottom: 12px; font-weight: 600;">{{ category }}</h4>
+                        <div class="skills-grid">
+                            {% for skill in skills %}
+                            <div class="skill-tag">{{ skill }}</div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+                {% endif %}
+
+                <!-- Strengths & Suggestions -->
+                <div class="section">
+                    <div class="section-header">
+                        <span class="section-icon">💪</span>
+                        <h3 class="section-title">Key Strengths</h3>
+                    </div>
+                    <ul class="info-list">
+                        {% for strength in result.analysis.strengths %}
+                        <li>
+                            <span class="list-icon">✓</span>
+                            <span>{{ strength }}</span>
+                        </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+
+                <div class="section">
+                    <div class="section-header">
+                        <span class="section-icon">💡</span>
+                        <h3 class="section-title">Improvement Suggestions</h3>
+                    </div>
+                    <ul class="info-list suggestion-list">
+                        {% for suggestion in result.analysis.suggestions %}
+                        <li>
+                            <span class="list-icon">💡</span>
+                            <span>{{ suggestion }}</span>
+                        </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+                {% endif %}
+
+                <!-- Contact Information -->
+                {% if result.analysis.contact_info %}
+                <div class="section">
+                    <div class="section-header">
+                        <span class="section-icon">📧</span>
+                        <h3 class="section-title">Contact Information</h3>
+                    </div>
+                    <div class="info-grid">
+                        {% if result.analysis.contact_info.email %}
+                        <div class="info-card">
+                            <div class="info-card-title">Email</div>
+                            <div class="info-card-value">{{ result.analysis.contact_info.email }}</div>
+                        </div>
+                        {% endif %}
+                        {% if result.analysis.contact_info.phone %}
+                        <div class="info-card">
+                            <div class="info-card-title">Phone</div>
+                            <div class="info-card-value">{{ result.analysis.contact_info.phone }}</div>
+                        </div>
+                        {% endif %}
+                        {% if result.analysis.contact_info.linkedin %}
+                        <div class="info-card">
+                            <div class="info-card-title">LinkedIn</div>
+                            <div class="info-card-value">
+                                <a href="{{ result.analysis.contact_info.linkedin }}" target="_blank"
+                                    style="color: var(--primary);">View Profile</a>
+                            </div>
+                        </div>
+                        {% endif %}
+                        {% if result.analysis.contact_info.github %}
+                        <div class="info-card">
+                            <div class="info-card-title">GitHub</div>
+                            <div class="info-card-value">
+                                <a href="{{ result.analysis.contact_info.github }}" target="_blank"
+                                    style="color: var(--primary);">View Profile</a>
+                            </div>
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+                {% endif %}
+
+                <!-- Certifications -->
+                {% if result.analysis.certifications %}
+                <div class="section">
+                    <div class="section-header">
+                        <span class="section-icon">🏆</span>
+                        <h3 class="section-title">Certifications</h3>
+                    </div>
+                    {% for category, certs in result.analysis.certifications.items() %}
+                    <div style="margin-bottom: 15px;">
+                        <h4 style="color: var(--primary); margin-bottom: 8px; font-weight: 600;">{{ category }}</h4>
+                        <ul class="info-list">
+                            {% for cert in certs %}
+                            <li>
+                                <span class="list-icon">🎓</span>
+                                <span>{{ cert }}</span>
+                            </li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                    {% endfor %}
+                </div>
+                {% endif %}
+            </div>
+
+            <!-- Feedback Section -->
+            {% if result.analysis_id %}
+            <div class="feedback-section">
+                <h3 class="feedback-title">📊 Help Improve Our AI</h3>
+                <p class="feedback-subtitle">Was this analysis accurate? Your feedback helps train our machine learning
+                    model!</p>
+                <div class="feedback-buttons">
+                    <button class="feedback-btn positive" onclick="submitFeedback(1)">
+                        <span>👍</span>
+                        <span>Accurate Analysis</span>
+                    </button>
+                    <button class="feedback-btn negative" onclick="submitFeedback(-1)">
+                        <span>👎</span>
+                        <span>Needs Improvement</span>
+                    </button>
+                </div>
+                <div class="feedback-message" id="feedbackMessage"></div>
+            </div>
+            {% endif %}
+
+            <!-- Action Buttons -->
+            <div class="action-section">
+                <div class="btn-group">
+                    <a href="/upload" class="btn btn-primary">
+                        <span>📤</span>
+                        <span>Analyze Another Resume</span>
+                    </a>
+                    <button onclick="window.print()" class="btn btn-secondary">
+                        <span>🖨️</span>
+                        <span>Print Results</span>
+                    </button>
+                    <a href="/export/csv" class="btn btn-success">
+                        <span>📊</span>
+                        <span>Export to CSV</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Feedback submission
+        async function submitFeedback(value) {
+            const analysisId = {{ result.analysis_id if result.analysis_id else 'null' }
+        };
+
+        if (!analysisId) {
+            showFeedbackMessage('error', 'Unable to submit feedback');
+            return;
+        }
+
+        // Disable buttons
+        document.querySelectorAll('.feedback-btn').forEach(btn => btn.disabled = true);
+
+        try {
+            const response = await fetch('/api/feedback', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    analysis_id: analysisId,
+                    feedback_value: value
+                })
+            });
+
+            const data = await response.json();
+
+            if (response.ok) {
+                showFeedbackMessage('success', '✓ Thank you! Your feedback helps improve our AI model.');
+            } else {
+                showFeedbackMessage('error', data.error || 'Failed to submit feedback');
+                document.querySelectorAll('.feedback-btn').forEach(btn => btn.disabled = false);
+            }
+        } catch (error) {
+            showFeedbackMessage('error', 'Network error. Please try again.');
+            document.querySelectorAll('.feedback-btn').forEach(btn => btn.disabled = false);
+        }
+        }
+
+        function showFeedbackMessage(type, message) {
+            const messageEl = document.getElementById('feedbackMessage');
+            messageEl.className = `feedback-message ${type}`;
+            messageEl.textContent = message;
+        }
+
+        // Animate progress bars on load
+        window.addEventListener('load', () => {
+            document.querySelectorAll('.progress-fill').forEach(bar => {
+                const width = bar.style.width;
+                bar.style.width = '0%';
+                setTimeout(() => {
+                    bar.style.width = width;
+                }, 100);
+            });
+        });
+    </script>
+</body>
+
+</html>
