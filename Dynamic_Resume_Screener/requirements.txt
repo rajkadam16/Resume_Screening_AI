@@ -1,0 +1,31 @@
+# Core Web Framework
+flask==3.1.0
+gunicorn==23.0.0
+
+# Database
+pymongo==4.10.1
+
+# ML Core
+scikit-learn==1.6.1
+numpy==2.2.2
+pandas==2.2.3
+joblib==1.4.2
+
+# ML Ensemble Models
+xgboost==2.1.4
+lightgbm==4.5.0
+imbalanced-learn==0.12.4
+
+# NLP & Embeddings (optional - comment out if too large for free tier)
+sentence-transformers==3.4.1
+
+# File Parsing
+PyPDF2==3.0.1
+python-docx==1.1.2
+
+# Visualization (for training pipeline)
+matplotlib==3.10.0
+seaborn==0.13.2
+
+# Environment
+python-dotenv==1.0.1
