@@ -16,8 +16,8 @@ xgboost==2.1.4
 lightgbm==4.5.0
 imbalanced-learn==0.12.4
 
-# NLP & Embeddings (optional - comment out if too large for free tier)
-sentence-transformers==3.4.1
+# NLP & Embeddings (removed - too heavy for free tier, app uses TF-IDF fallback)
+# sentence-transformers==3.4.1
 
 # File Parsing
 PyPDF2==3.0.1
